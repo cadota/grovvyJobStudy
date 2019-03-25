@@ -19,6 +19,6 @@ public class StartJob {
         Util.createJob("test","test","0/2 * * * * ?");
         Map<String ,String> map = new HashMap<String, String>();
         map.put("xxxxxxxxxxxxxxx","asdqdafasf");
-        Util.createJob("test1","test1","0/2 * * * * ?",map);
+        Util.createJob("test1","test","0/2 * * * * ?",map);
     }
 }
