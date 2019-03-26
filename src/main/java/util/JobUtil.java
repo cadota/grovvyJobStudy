@@ -67,6 +67,15 @@ public class JobUtil {
         //6.启动 调度器
         scheduler.start();
     }
+
+    /**
+     *
+     * @param jobName 任务名称（唯一）
+     * @param triggerName 触发器名称（唯一）
+     * @param runTime 执行时间，参考quartz写法
+     * @param map 传递给任务类的参数
+     * @throws SchedulerException
+     */
     public static void createJob(String jobName, String triggerName, String runTime,Map<String,String> map) throws SchedulerException {
         JobDetail jb = JobBuilder.newJob(GroovyJob.class)
                 .withDescription("this is a ram job") //job的描述
