@@ -1,10 +1,8 @@
 package job;
 
 import org.quartz.*;
-import org.quartz.impl.StdSchedulerFactory;
-import util.Util;
+import util.JobUtil;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,9 +14,9 @@ public class StartJob {
 
 
     public static void main(String[] args) throws SchedulerException {
-        Util.createJob("test","test","0/2 * * * * ?");
+        JobUtil.createJob("test","test","0/2 * * * * ?");
         Map<String ,String> map = new HashMap<String, String>();
         map.put("xxxxxxxxxxxxxxx","asdqdafasf");
-        Util.createJob("test1","test","0/2 * * * * ?",map);
+        JobUtil.createJob("test1","test·","0/2 * * * * ?",map);
     }
 }
