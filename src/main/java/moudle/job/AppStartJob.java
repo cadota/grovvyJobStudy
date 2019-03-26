@@ -1,7 +1,6 @@
-package job;
+package moudle.job;
 
 import org.quartz.*;
-import util.JobUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +9,7 @@ import java.util.Map;
  * 定时任务====quartz启动类
  * Created by lizhen on 2018/4/9 0009.
  */
-public class StartJob {
+public class AppStartJob {
 
 
     public static void main(String[] args) throws SchedulerException {

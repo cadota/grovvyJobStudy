@@ -1,6 +1,5 @@
-package util;
+package moudle.job;
 
-import job.GroovyJob;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -47,8 +46,8 @@ public class JobUtil {
     }
     public static void createJob(String jobName,String triggerName,String runTime) throws SchedulerException {
         JobDetail jb = JobBuilder.newJob(GroovyJob.class)
-                .withDescription("this is a ram job") //job的描述
-                .withIdentity(jobName, "ramGroup") //job 的name和group
+                .withDescription("this is a ram moudle.job") //job的描述
+                .withIdentity(jobName, "ramGroup") //moudle.job 的name和group
                 .build();
         long time = System.currentTimeMillis() + 3 * 1000L; //3秒后启动任务
         Date statTime = new Date(time);
@@ -78,8 +77,8 @@ public class JobUtil {
      */
     public static void createJob(String jobName, String triggerName, String runTime,Map<String,String> map) throws SchedulerException {
         JobDetail jb = JobBuilder.newJob(GroovyJob.class)
-                .withDescription("this is a ram job") //job的描述
-                .withIdentity(jobName, "ramGroup") //job 的name和group
+                .withDescription("this is a ram moudle.job") //job的描述
+                .withIdentity(jobName, "ramGroup") //moudle.job 的name和group
                 .build();
         long time = System.currentTimeMillis() + 3 * 1000L; //3秒后启动任务
         Date statTime = new Date(time);

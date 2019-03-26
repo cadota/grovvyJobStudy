@@ -1,4 +1,4 @@
-package job;
+package moudle.job;
 
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
@@ -6,7 +6,6 @@ import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import util.JobUtil;
 
 public class GroovyJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
