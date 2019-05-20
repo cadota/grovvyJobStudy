@@ -9,31 +9,6 @@ import java.util.Set;
 
 @SuppressWarnings("Duplicates")
 public class JobUtil {
-    public static String runContext = "import string.Utils\n" +
-            "\n" +
-            "class Test {\n" +
-            "    void m(long l) { // 1\n" +
-            "        println \"in m(long)\"\n" +
-            "    }\n" +
-            "    void m(Integer i) { //2\n" +
-            "        println \"in m(Integer)\"\n" +
-            "    }\n" +
-            "    void m(int i) { //2\n" +
-            "        println \"in m(int)\"\n" +
-            "    }\n" +
-            "\n" +
-            "    static m(String a){\n" +
-            "        println(\"in m(String)\")\n" +
-            "    }\n" +
-            "     static void main (String[] args){\n" +
-            "         long i = 1\n" +
-            "         Test test = new Test()\n" +
-            "         test.m(i)\n" +
-            "         m(\"c\")\n" +
-            "         println(\"dd\"+Utils.runContext)\n" +
-            "    }\n" +
-            "\n" +
-            "}\n";
     public static SchedulerFactory sf = new StdSchedulerFactory();
     public static Scheduler scheduler;
 
@@ -46,7 +21,7 @@ public class JobUtil {
     }
     public static void createJob(String jobName,String triggerName,String runTime) throws SchedulerException {
         JobDetail jb = JobBuilder.newJob(GroovyJob.class)
-                .withDescription("this is a ram moudle.job") //job的描述
+                .withDescription("自动化上传任务") //job的描述
                 .withIdentity(jobName, "ramGroup") //moudle.job 的name和group
                 .build();
         long time = System.currentTimeMillis() + 3 * 1000L; //3秒后启动任务
@@ -77,7 +52,7 @@ public class JobUtil {
      */
     public static void createJob(String jobName, String triggerName, String runTime,Map<String,String> map) throws SchedulerException {
         JobDetail jb = JobBuilder.newJob(GroovyJob.class)
-                .withDescription("this is a ram moudle.job") //job的描述
+                .withDescription("自动化上传任务") //job的描述
                 .withIdentity(jobName, "ramGroup") //moudle.job 的name和group
                 .build();
         long time = System.currentTimeMillis() + 3 * 1000L; //3秒后启动任务
