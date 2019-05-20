@@ -5,13 +5,17 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
+import org.apache.tools.ant.util.StringUtils;
+import org.codehaus.groovy.util.StringUtil;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import utils.HttpClientUtils;
+import utils.ParamsUtils;
 import utils.UploadUtils;
 
+import java.io.File;
 import java.util.List;
 
 public class GroovyJob implements Job {
@@ -24,17 +28,64 @@ public class GroovyJob implements Job {
 
     }
     public static void doIt(){
-//业务开始
-        //上传
-        String result = UploadUtils.uploadFile("G:\\untitled.png");
-        JSONObject jsonObject = JSON.parseObject(result);
-        JSONArray DATA = jsonObject.getJSONArray("DATA");
-        List<String> list = DATA.toJavaObject(List.class);
-        System.out.println(list.size());
-        //表单
-        String word = "{\"app\":\"libsBackManager\",\"methodName\":\"findChildLibs\",\"data\":{\"pageSize\":10,\"currPage\":1,\"userName\":\"BJOO3694\",\"search\":\"\",\"parentLibId\":\"\",\"order\":\"orders\",\"sort\":\"asc\"}}";
-        System.out.println(HttpClientUtils.httpPostWithJson(word));
-
+        getFile("G:\\明亚","");
     }
+
+    public static void getFile(String pathname,String parentId) {
+        if(parentId==null){
+            parentId = "";
+        }
+        //先将指定路径下的所有文件实例化
+        File file = new File(pathname);
+        //判断实例化的对象file是否存在，即指定路径是否存在
+        if (!file.exists()) {
+            //若file不存在，则抛出异常
+            throw new IllegalArgumentException("目录" + pathname + "不存在");
+        }
+        //若文件存在，则将所有文件的实例化对象转化为数组形式
+        File[] files = file.listFiles();
+        //遍历文件数组
+        for (File file2 : files) {
+            System.out.println(file2.getPath());
+            if (file2.isDirectory()) {
+                //调用创建文件夹接口
+                String param = ParamsUtils.getFolderParams(file2.getName(),parentId);
+                String result = HttpClientUtils.httpPostWithJson(param);
+                JSONObject jsonObject = JSON.parseObject(result);
+                JSONObject data = jsonObject.getJSONObject("data");
+                //调用自己时候传入的参数为上一句判断出来的文件夹路径
+                JSONObject o = JSON.parseObject(data.toString());
+                Boolean flag = o.getBoolean("FLAG");
+                if(flag){
+                    long DATA = o.getLong("DATA");
+                    String tempParentId = String.valueOf(DATA);
+                    getFile(file2.getAbsolutePath(),tempParentId);
+                    System.out.println("创建文件夹："+tempParentId);
+                }else {
+                    System.out.println("创建文件夹失败");
+                    System.exit(1);
+                }
+
+            }else {
+                //调用创建文件接口
+                //上传
+                try {
+                String result = UploadUtils.uploadFile(file2.getPath());
+                JSONObject jsonObject = JSON.parseObject(result);
+                JSONArray DATA = jsonObject.getJSONArray("DATA");
+                List<String> list = DATA.toJavaObject(List.class);
+                if(list!=null&&list.size()==1){
+                    String param = ParamsUtils.getFileParams(file2.getName(),list.get(0),parentId);
+                    String result1 = HttpClientUtils.httpPostWithJson(param);
+                    System.out.println("创建文件："+result1);
+                }
+                }catch (Exception e){
+                    System.out.println(file2.getPath()+e.getMessage());
+                }
+            }
+
+        }
+    }
+
 
 }

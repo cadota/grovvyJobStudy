@@ -28,9 +28,9 @@ import java.util.UUID;
  */
 public class HttpClientUtils {
 
-    public static boolean httpPostWithJson(String word) {
+    public static String httpPostWithJson(String word) {
         String url = "http://test.mingya.com.cn/SERVER/service.html?SERVERID=ZCMS-110006&APP_ID=10006";
-        boolean isSuccess = false;
+        String isSuccess = "";
 
         HttpPost post = null;
         try {
@@ -58,10 +58,8 @@ public class HttpClientUtils {
             // 检验返回码
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode != HttpStatus.SC_OK) {
-                isSuccess = false;
             } else {
                 // 返回码中包含retCode及会话Id
-                System.out.println("表单结果："+statusCode);
                 StringBuffer stringBuffer = new StringBuffer();
                 InputStream inputStream = response.getEntity().getContent();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -69,12 +67,12 @@ public class HttpClientUtils {
                 while ((line = reader.readLine()) != null){
                     stringBuffer.append(line);
                 }
-                System.out.println(stringBuffer.toString());
-                    isSuccess = true;
+                isSuccess = stringBuffer.toString();
+                return isSuccess;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            isSuccess = false;
+          return "";
         } finally {
             if (post != null) {
                 try {
@@ -86,11 +84,5 @@ public class HttpClientUtils {
             }
         }
         return isSuccess;
-    }
-    // 构建唯一会话Id
-    public static String getSessionId() {
-        UUID uuid = UUID.randomUUID();
-        String str = uuid.toString();
-        return str.substring(0, 8) + str.substring(9, 13) + str.substring(14, 18) + str.substring(19, 23) + str.substring(24);
     }
 }
