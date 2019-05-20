@@ -34,7 +34,7 @@ public class ParamsUtils {
         baseModel = baseModel.replace(".v8flags.6.8.275.32-node.51.2ad0123a6dc2bb7d85f7d84bcade18ce.json",fileName);
         return baseModel;
     }
-    public static String getFolderParams(String folderName,String parentId){
+    public static String getFolderParams(String folderName,String parentId,String level){
         String baseModel = "{\n" +
                 "\t\"app\": \"rwLibService\",\n" +
                 "\t\"methodName\": \"createLibs\",\n" +
@@ -45,13 +45,14 @@ public class ParamsUtils {
                 "\t\t\"operateType\": \"rw\",\n" +
                 "\t\t\"type\": \"folder\",\n" +
                 "\t\t\"ispublish\": true,\n" +
-                "\t\t\"level\": 1,\n" +
+                "\t\t\"level\": level1,\n" +
                 "\t\t\"parentId\": \"159721679721140224\",\n" +
                 "\t\t\"isLimitHandler\": false,\n" +
                 "\t\t\"orgCodes\": \"G|总部\",\n" +
                 "\t\t\"agent_code\": \"BJOO3702\"\n" +
                 "\t}\n" +
                 "}";
+        baseModel = baseModel.replace("level1",level);
         baseModel = baseModel.replace("159721679721140224",parentId);
         baseModel = baseModel.replace(".v8flags.6.8.275.32-node.51.2ad0123a6dc2bb7d85f7d84bcade18ce.json",folderName);
         return baseModel;

@@ -3,10 +3,6 @@ package moudle.job;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import groovy.lang.Binding;
-import groovy.lang.GroovyShell;
-import org.apache.tools.ant.util.StringUtils;
-import org.codehaus.groovy.util.StringUtil;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -28,13 +24,10 @@ public class GroovyJob implements Job {
 
     }
     public static void doIt(){
-        getFile("G:\\明亚","");
+        getFile("G:\\cehi","","1");
     }
 
-    public static void getFile(String pathname,String parentId) {
-        if(parentId==null){
-            parentId = "";
-        }
+    public static void getFile(String pathname,String parentId,String level) {
         //先将指定路径下的所有文件实例化
         File file = new File(pathname);
         //判断实例化的对象file是否存在，即指定路径是否存在
@@ -49,7 +42,7 @@ public class GroovyJob implements Job {
             System.out.println(file2.getPath());
             if (file2.isDirectory()) {
                 //调用创建文件夹接口
-                String param = ParamsUtils.getFolderParams(file2.getName(),parentId);
+                String param = ParamsUtils.getFolderParams(file2.getName(),parentId,level);
                 String result = HttpClientUtils.httpPostWithJson(param);
                 JSONObject jsonObject = JSON.parseObject(result);
                 JSONObject data = jsonObject.getJSONObject("data");
@@ -59,7 +52,12 @@ public class GroovyJob implements Job {
                 if(flag){
                     long DATA = o.getLong("DATA");
                     String tempParentId = String.valueOf(DATA);
-                    getFile(file2.getAbsolutePath(),tempParentId);
+                    if(tempParentId!=null&&!tempParentId.equals("")){
+                        getFile(file2.getAbsolutePath(),tempParentId,level+1);
+                    }else {
+                        System.out.println("服务端创建失败："+tempParentId);
+                        System.exit(1);
+                    }
                     System.out.println("创建文件夹："+tempParentId);
                 }else {
                     System.out.println("创建文件夹失败");
