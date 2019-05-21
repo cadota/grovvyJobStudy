@@ -20,6 +20,8 @@ public class AppStartJob {
 
 
     public static void main(String[] args) throws SchedulerException {
-        doIt();
+        //doIt();
+        String result = UploadUtils.uploadFile("D:\\下载说明.txt");
+        System.out.println(result);
     }
 }
