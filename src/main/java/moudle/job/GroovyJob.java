@@ -3,6 +3,7 @@ package moudle.job;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -24,11 +25,12 @@ public class GroovyJob implements Job {
 
     }
     public static void doIt(){
-        getFile("G:\\cehi","","1");
+        getFile("E:\\微吼","","1","");
     }
 
-    public static void getFile(String pathname,String parentId,String level) {
+    public static void getFile(String pathname,String parentId,String level,String area) {
         //先将指定路径下的所有文件实例化
+        String result = null;
         File file = new File(pathname);
         //判断实例化的对象file是否存在，即指定路径是否存在
         if (!file.exists()) {
@@ -39,11 +41,21 @@ public class GroovyJob implements Job {
         File[] files = file.listFiles();
         //遍历文件数组
         for (File file2 : files) {
-            System.out.println(file2.getPath());
+            String areaCode = ParamsUtils.getAreaCode(file2.getName());
             if (file2.isDirectory()) {
                 //调用创建文件夹接口
-                String param = ParamsUtils.getFolderParams(file2.getName(),parentId,level);
-                String result = HttpClientUtils.httpPostWithJson(param);
+                String param = "";
+                if(level.equals("1")){
+                 param = ParamsUtils.getFolderParams(file2.getName(),parentId,level,areaCode);
+                 area = areaCode;
+                }else {
+                    if(file2.getName().contains("[")){
+                        param = ParamsUtils.getFolderParams(file2.getName(),parentId,level,areaCode);
+                    }else {
+                        param = ParamsUtils.getFolderParams(file2.getName(),parentId,level,area);
+                    }
+                }
+                 result = HttpClientUtils.httpPostWithJson(param);
                 JSONObject jsonObject = JSON.parseObject(result);
                 JSONObject data = jsonObject.getJSONObject("data");
                 //调用自己时候传入的参数为上一句判断出来的文件夹路径
@@ -53,13 +65,14 @@ public class GroovyJob implements Job {
                     long DATA = o.getLong("DATA");
                     String tempParentId = String.valueOf(DATA);
                     if(tempParentId!=null&&!tempParentId.equals("")){
-                        getFile(file2.getAbsolutePath(),tempParentId,level+1);
+                        getFile(file2.getAbsolutePath(),tempParentId,level+1,area);
                     }else {
+                        System.out.println("失败结果："+result);
                         System.out.println("服务端创建失败："+tempParentId);
                         System.exit(1);
                     }
-                    System.out.println("创建文件夹："+tempParentId);
                 }else {
+                    System.out.println("失败结果："+result);
                     System.out.println("创建文件夹失败");
                     System.exit(1);
                 }
@@ -68,16 +81,17 @@ public class GroovyJob implements Job {
                 //调用创建文件接口
                 //上传
                 try {
-                String result = UploadUtils.uploadFile(file2.getPath());
+                 result = UploadUtils.uploadFile(file2.getPath());
                 JSONObject jsonObject = JSON.parseObject(result);
                 JSONArray DATA = jsonObject.getJSONArray("DATA");
                 List<String> list = DATA.toJavaObject(List.class);
                 if(list!=null&&list.size()==1){
-                    String param = ParamsUtils.getFileParams(file2.getName(),list.get(0),parentId);
+                    String param = ParamsUtils.getFileParams(file2.getName(),list.get(0),parentId,area);
                     String result1 = HttpClientUtils.httpPostWithJson(param);
                     System.out.println("创建文件："+result1);
                 }
                 }catch (Exception e){
+                    System.out.println(result);
                     System.out.println(file2.getPath()+e.getMessage());
                 }
             }
