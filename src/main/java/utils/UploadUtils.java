@@ -20,7 +20,7 @@ public class UploadUtils {
             // 定义数据分隔线
             String BOUNDARY = "========7d4a6d158c9";
             // 服务器的域名
-            URL url = new URL("http://test.mingya.com.cn/file-server/files/upload?uploadType=libsFile");
+            URL url = new URL("http://test.mingya.com.cn/file-server/files/newUpload?uploadType=libsFile");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             // 设置为POST情
             conn.setRequestMethod("POST");
