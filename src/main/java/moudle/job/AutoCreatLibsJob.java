@@ -15,7 +15,7 @@ import utils.UploadUtils;
 import java.io.File;
 import java.util.List;
 
-public class GroovyJob implements Job {
+public class AutoCreatLibsJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         String id = context.getJobDetail().getKey().getName();
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
@@ -24,10 +24,6 @@ public class GroovyJob implements Job {
 
 
     }
-    public static void doIt(){
-        getFile("E:\\微吼","","1","");
-    }
-
     public static void getFile(String pathname,String parentId,String level,String area) {
         //先将指定路径下的所有文件实例化
         String result = null;

@@ -1,5 +1,6 @@
-package moudle.job;
+package utils;
 
+import moudle.job.AutoCreatLibsJob;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -20,7 +21,7 @@ public class JobUtil {
         }
     }
     public static void createJob(String jobName,String triggerName,String runTime) throws SchedulerException {
-        JobDetail jb = JobBuilder.newJob(GroovyJob.class)
+        JobDetail jb = JobBuilder.newJob(AutoCreatLibsJob.class)
                 .withDescription("自动化上传任务") //job的描述
                 .withIdentity(jobName, "ramGroup") //moudle.job 的name和group
                 .build();
@@ -51,7 +52,7 @@ public class JobUtil {
      * @throws SchedulerException
      */
     public static void createJob(String jobName, String triggerName, String runTime,Map<String,String> map) throws SchedulerException {
-        JobDetail jb = JobBuilder.newJob(GroovyJob.class)
+        JobDetail jb = JobBuilder.newJob(AutoCreatLibsJob.class)
                 .withDescription("自动化上传任务") //job的描述
                 .withIdentity(jobName, "ramGroup") //moudle.job 的name和group
                 .build();
